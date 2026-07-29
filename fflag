@@ -1,0 +1,63 @@
+-- FFlag Manipulation Script
+-- These modify internal Roblox engine behavior
+
+local FFlagValues = {
+    -- Rendering/Graphics
+    ["FFlagDebugGraphicsPreferD3D11"] = true,
+    ["FFlagDebugGraphicsPreferVulkan"] = false,
+    ["FFlagDebugGraphicsPreferMetal"] = false,
+    
+    -- Physics
+    ["FFlagDebugPhysicsDisableInterpolation"] = true,
+    ["FFlagDebugPhysicsSkipUnanchored"] = true,
+    
+    -- Network
+    ["FFlagDebugNetworkDisableRateLimiter"] = true,
+    ["FFlagDebugNetworkSkipIntegrityChecks"] = true,
+    
+    -- Anti-cheat bypasses
+    ["FFlagDebugDisableIntegrityChecks"] = true,
+    ["FFlagDebugDisableClientTelemetry"] = true,
+    
+    -- Performance
+    ["FFlagDebugDisableRenderRetry"] = true,
+    ["FFlagDebugFastGPULightCulling"] = true,
+    
+    -- Character
+    ["FFlagDebugHumanoidAsyncUpdate"] = false,
+    ["FFlagDebugHumanoidInterpolation"] = false,
+    
+    -- Camera
+    ["FFlagDebugCameraDisableZoomLimits"] = true,
+    ["FFlagDebugCameraFirstPersonNoClip"] = true,
+    
+    -- UI
+    ["FFlagDebugDisableUiNavigation"] = true,
+    
+    -- Streaming
+    ["FFlagDebugStreamingDisableThrottling"] = true,
+    ["FFlagDebugStreamingForceContent"] = true,
+}
+
+-- Apply FFlags
+for flag, value in pairs(FFlagValues) do
+    local success, err = pcall(function()
+        -- Method 1: Direct set (if available)
+        if setfflag then
+            setfflag(flag, tostring(value))
+        end
+        
+        -- Method 2: Through debug library
+        if debug and debug.setconstant then
+            -- Alternative method
+        end
+    end)
+    
+    if success then
+        print("[FFlag] Set " .. flag .. " = " .. tostring(value))
+    else
+        warn("[FFlag] Failed to set " .. flag .. ": " .. tostring(err))
+    end
+end
+
+print("FF
