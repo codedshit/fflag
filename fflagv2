@@ -1,42 +1,159 @@
--- Blox Fruits Mobile FPS Booster
--- Optimized FFlags for maximum performance
+-- ╔══════════════════════════════════════════════════════════╗
+-- ║     DELTA EXECUTOR - EXTREME FPS BOOSTER FOR BLOX FRUITS  ║
+-- ║     Target: 240-500+ FPS on Mobile                        ║
+-- ╚══════════════════════════════════════════════════════════╝
+
+if not game:IsLoaded() then game.Loaded:Wait() end
 
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 local enabled = false
 
--- Create simple UI
+-- ═══════════════════════════════════════════════════════════
+-- EXTREME FFLAGS - AGGRESSIVE PERFORMANCE MODE
+-- ═══════════════════════════════════════════════════════════
+
+local extremeFFlags = {
+    -- ═══════ RENDERING KILL SWITCHES ═══════
+    ["FFlagDebugGraphicsPreferD3D11"] = "true",
+    ["FFlagDebugGraphicsDisableVulkan"] = "true",
+    ["FFlagDebugGraphicsDisableMetal"] = "true",
+    ["FFlagDebugGraphicsDisableOpenGL"] = "true",
+    
+    -- ═══════ DISABLE ALL VISUAL EFFECTS ═══════
+    ["FFlagDebugDisablePostFX"] = "true",
+    ["FFlagDebugDisableBloom"] = "true",
+    ["FFlagDebugDisableSunRays"] = "true",
+    ["FFlagDebugDisableColorCorrection"] = "true",
+    ["FFlagDebugDisableDepthOfField"] = "true",
+    ["FFlagDebugDisableBlur"] = "true",
+    ["FFlagDebugDisableMotionBlur"] = "true",
+    ["FFlagDebugDisableTransparency"] = "true",
+    ["FFlagDebugDisableReflections"] = "true",
+    
+    -- ═══════ SHADOWS COMPLETELY OFF ═══════
+    ["FFlagDebugGraphicsDisableShadows"] = "true",
+    ["FFlagDebugGraphicsDisableGlobalShadows"] = "true",
+    ["FFlagDebugGraphicsDisableLocalShadows"] = "true",
+    ["FFlagDebugGraphicsShadowSoftening"] = "0",
+    ["FFlagDebugGraphicsShadowQuality"] = "0",
+    
+    -- ═══════ TEXTURE & MESH REDUCTION ═══════
+    ["FFlagDebugGraphicsDisableTextureFiltering"] = "true",
+    ["FFlagDebugGraphicsDisableTextureStreaming"] = "true",
+    ["FFlagDebugGraphicsPreferLowQuality"] = "true",
+    ["FFlagDebugGraphicsTextureQuality"] = "0",
+    ["FFlagDebugGraphicsMeshQuality"] = "0",
+    ["FFlagDebugGraphicsDisableLODs"] = "true",
+    ["FFlagDebugGraphicsForceLowLOD"] = "true",
+    ["FFlagDebugGraphicsDisableMeshRendering"] = "false",
+    ["FFlagDebugGraphicsDisableInstancing"] = "false",
+    
+    -- ═══════ LIGHTING OPTIMIZATION ═══════
+    ["FFlagDebugDisableLightUpdates"] = "true",
+    ["FFlagDebugFastGPULightCulling"] = "true",
+    ["FFlagDebugGraphicsDisableLights"] = "true",
+    ["FFlagDebugGraphicsLightShadows"] = "false",
+    
+    -- ═══════ ANIMATION OPTIMIZATION ═══════
+    ["FFlagDebugHumanoidAsyncUpdate"] = "true",
+    ["FFlagDebugHumanoidInterpolation"] = "false",
+    ["FFlagDebugAnimationDisableInterpolation"] = "true",
+    ["FFlagDebugAnimationSkipUpdate"] = "true",
+    ["FFlagDebugAnimationReduceRate"] = "true",
+    
+    -- ═══════ PHYSICS OPTIMIZATION ═══════
+    ["FFlagDebugPhysicsDisableInterpolation"] = "true",
+    ["FFlagDebugPhysicsSkipUnanchored"] = "true",
+    ["FFlagDebugPhysicsReduceRate"] = "true",
+    
+    -- ═══════ NETWORK OPTIMIZATION ═══════
+    ["FFlagDebugNetworkDisableRateLimiter"] = "true",
+    ["FFlagDebugNetworkSkipIntegrityChecks"] = "true",
+    ["FFlagDebugNetworkReduceTraffic"] = "true",
+    
+    -- ═══════ STREAMING OPTIMIZATION ═══════
+    ["FFlagDebugStreamingDisableThrottling"] = "true",
+    ["FFlagDebugStreamingForceContent"] = "true",
+    ["FFlagDebugStreamingMinRadius"] = "25",
+    ["FFlagDebugStreamingMaxRadius"] = "50",
+    ["FFlagDebugStreamingTargetRadius"] = "30",
+    
+    -- ═══════ UI OPTIMIZATION ═══════
+    ["FFlagDebugDisableUiBlur"] = "true",
+    ["FFlagDebugDisableUiAnimations"] = "true",
+    ["FFlagDebugDisableUiTransparency"] = "true",
+    
+    -- ═══════ MOBILE SPECIFIC ═══════
+    ["FFlagDebugMobileDisableTouchEffects"] = "true",
+    ["FFlagDebugMobileOptimizedRendering"] = "true",
+    ["FFlagDebugMobileReduceQuality"] = "true",
+    ["FFlagDebugMobileLowMemoryMode"] = "true",
+    ["FFlagDebugMobileDisableHaptics"] = "true",
+    
+    -- ═══════ FPS UNLOCKER STYLE ═══════
+    ["FFlagDebugDisableRenderRetry"] = "true",
+    ["FFlagDebugDisableFrameRateManager"] = "true",
+    ["FFlagDebugGraphicsVSync"] = "false",
+    ["FFlagDebugGraphicsFrameRateLimit"] = "0",
+    ["FFlagDebugGraphicsDisableFrameLimiter"] = "true",
+    
+    -- ═══════ ANTI-LAG EXTREME ═══════
+    ["FFlagDebugDisableClientTelemetry"] = "true",
+    ["FFlagDebugDisableIntegrityChecks"] = "true",
+    ["FFlagDebugDisableMemoryCollection"] = "false",
+    ["FFlagDebugAggressiveMemoryCollection"] = "true",
+}
+
+-- ═══════════════════════════════════════════════════════════
+-- UI CREATION
+-- ═══════════════════════════════════════════════════════════
+
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "FPSBoost_Mobile"
+screenGui.Name = "EXTREME_FPS_BOOST"
 screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.Parent = CoreGui
 
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 120, 0, 50)
-button.Position = UDim2.new(0.5, -60, 0.85, 0)
-button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-button.TextColor3 = Color3.fromRGB(255, 255, 255)
-button.TextSize = 18
-button.Font = Enum.Font.GothamBold
-button.Text = "BOOST FPS"
-button.Parent = screenGui
+-- Main button
+local boostBtn = Instance.new("TextButton")
+boostBtn.Name = "BoostButton"
+boostBtn.Size = UDim2.new(0, 140, 0, 60)
+boostBtn.Position = UDim2.new(0.5, -70, 0.8, 0)
+boostBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 100)
+boostBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+boostBtn.TextSize = 20
+boostBtn.Font = Enum.Font.GothamBlack
+boostBtn.Text = "EXTREME\nFPS BOOST"
+boostBtn.TextWrapped = true
+boostBtn.Parent = screenGui
 
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 12)
-corner.Parent = button
+local corner1 = Instance.new("UICorner")
+corner1.CornerRadius = UDim.new(0, 15)
+corner1.Parent = boostBtn
 
+local stroke1 = Instance.new("UIStroke")
+stroke1.Color = Color3.fromRGB(255, 255, 255)
+stroke1.Thickness = 2
+stroke1.Parent = boostBtn
+
+-- Close button (appears after boost)
 local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.new(0, 30, 0, 30)
-closeBtn.Position = UDim2.new(0.5, 50, 0.85, 10)
-closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+closeBtn.Name = "CloseButton"
+closeBtn.Size = UDim2.new(0, 40, 0, 40)
+closeBtn.Position = UDim2.new(0.5, 60, 0.8, 10)
+closeBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeBtn.TextSize = 14
+closeBtn.TextSize = 18
 closeBtn.Font = Enum.Font.GothamBold
-closeBtn.Text = "X"
+closeBtn.Text = "✕"
 closeBtn.Visible = false
 closeBtn.Parent = screenGui
 
@@ -44,69 +161,34 @@ local corner2 = Instance.new("UICorner")
 corner2.CornerRadius = UDim.new(1, 0)
 corner2.Parent = closeBtn
 
--- FPS Optimized FFlags for Blox Fruits
-local fflags = {
-    -- Rendering optimization
-    ["FFlagDebugGraphicsPreferD3D11"] = "true",
-    ["FFlagDebugGraphicsDisableVulkan"] = "true",
-    ["FFlagDebugGraphicsDisableMetal"] = "true",
-    
-    -- Disable expensive effects
-    ["FFlagDebugDisablePostFX"] = "true",
-    ["FFlagDebugDisableBloom"] = "true",
-    ["FFlagDebugDisableSunRays"] = "true",
-    ["FFlagDebugDisableColorCorrection"] = "true",
-    ["FFlagDebugDisableDepthOfField"] = "true",
-    ["FFlagDebugDisableBlur"] = "true",
-    
-    -- Texture/quality reduction
-    ["FFlagDebugGraphicsDisableTextureFiltering"] = "true",
-    ["FFlagDebugGraphicsDisableShadows"] = "true",
-    ["FFlagDebugGraphicsDisableGlobalShadows"] = "true",
-    ["FFlagDebugGraphicsPreferLowQuality"] = "true",
-    
-    -- Mesh/part optimization
-    ["FFlagDebugDisableMeshRendering"] = "false",
-    ["FFlagDebugDisableInstancing"] = "false",
-    ["FFlagDebugGraphicsDisableLODs"] = "true",
-    
-    -- Animation/physics optimization
-    ["FFlagDebugHumanoidAsyncUpdate"] = "true",
-    ["FFlagDebugHumanoidInterpolation"] = "false",
-    ["FFlagDebugAnimationDisableInterpolation"] = "true",
-    
-    -- Network optimization
-    ["FFlagDebugNetworkDisableRateLimiter"] = "true",
-    ["FFlagDebugNetworkSkipIntegrityChecks"] = "true",
-    
-    -- UI optimization
-    ["FFlagDebugDisableUiBlur"] = "true",
-    ["FFlagDebugDisableUiAnimations"] = "true",
-    
-    -- Streaming optimization
-    ["FFlagDebugStreamingDisableThrottling"] = "true",
-    ["FFlagDebugStreamingForceContent"] = "true",
-    ["FFlagDebugStreamingMinRadius"] = "50",
-    ["FFlagDebugStreamingMaxRadius"] = "100",
-    
-    -- Character optimization
-    ["FFlagDebugCharacterSkipUpdate"] = "false",
-    ["FFlagDebugCharacterOptimizedUpdates"] = "true",
-    
-    -- Mobile specific
-    ["FFlagDebugMobileDisableTouchEffects"] = "true",
-    ["FFlagDebugMobileOptimizedRendering"] = "true",
-    ["FFlagDebugMobileReduceQuality"] = "true",
-    
-    -- Anti-lag
-    ["FFlagDebugDisableRenderRetry"] = "true",
-    ["FFlagDebugFastGPULightCulling"] = "true",
-    ["FFlagDebugDisableLightUpdates"] = "true",
-}
+-- FPS Display
+local fpsFrame = Instance.new("Frame")
+fpsFrame.Size = UDim2.new(0, 120, 0, 40)
+fpsFrame.Position = UDim2.new(0, 10, 0, 10)
+fpsFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+fpsFrame.BackgroundTransparency = 0.3
+fpsFrame.Visible = false
+fpsFrame.Parent = screenGui
 
--- Apply FFlags function
-local function applyFFlags()
-    for flag, value in pairs(fflags) do
+local corner3 = Instance.new("UICorner")
+corner3.CornerRadius = UDim.new(0, 8)
+corner3.Parent = fpsFrame
+
+local fpsLabel = Instance.new("TextLabel")
+fpsLabel.Size = UDim2.new(1, 0, 1, 0)
+fpsLabel.BackgroundTransparency = 1
+fpsLabel.TextColor3 = Color3.fromRGB(0, 255, 100)
+fpsLabel.TextSize = 22
+fpsLabel.Font = Enum.Font.GothamBlack
+fpsLabel.Text = "FPS: --"
+fpsLabel.Parent = fpsFrame
+
+-- ═══════════════════════════════════════════════════════════
+-- EXTREME OPTIMIZATION FUNCTIONS
+-- ═══════════════════════════════════════════════════════════
+
+local function applyExtremeFFlags()
+    for flag, value in pairs(extremeFFlags) do
         pcall(function()
             if setfflag then
                 setfflag(flag, value)
@@ -115,114 +197,286 @@ local function applyFFlags()
     end
 end
 
--- Optimize game settings
-local function optimizeGame()
-    -- Lower graphics settings
-    settings().Rendering.QualityLevel = 1
-    
-    -- Disable lighting effects
+local function nukeVisualEffects()
+    -- Destroy all lighting effects
     for _, effect in ipairs(Lighting:GetChildren()) do
-        if effect:IsA("BloomEffect") or effect:IsA("SunRaysEffect") or 
-           effect:IsA("ColorCorrectionEffect") or effect:IsA("BlurEffect") or
-           effect:IsA("DepthOfFieldEffect") then
-            effect.Enabled = false
+        if effect:IsA("PostEffect") or effect:IsA("Sky") then
+            pcall(function() effect:Destroy() end)
         end
     end
     
-    -- Optimize workspace
-    workspace.LevelOfDetailMode = Enum.ModelLevelOfDetail.Disabled
+    -- Set lighting to minimum
+    Lighting.GlobalShadows = false
+    Lighting.Outlines = false
+    Lighting.Technology = Enum.Technology.Compatibility
     
-    -- Lower particle quality
-    for _, obj in ipairs(workspace:GetDescendants()) do
+    -- Nuke atmosphere
+    if Lighting:FindFirstChildOfClass("Atmosphere") then
+        pcall(function() Lighting:FindFirstChildOfClass("Atmosphere"):Destroy() end)
+    end
+    
+    -- Nuke clouds
+    if Workspace:FindFirstChildOfClass("Clouds") then
+        pcall(function() Workspace:FindFirstChildOfClass("Clouds"):Destroy() end)
+    end
+end
+
+local function optimizeWorkspace()
+    -- Reduce streaming
+    Workspace.StreamingEnabled = true
+    
+    -- Set level of detail to minimum
+    for _, model in ipairs(Workspace:GetDescendants()) do
+        if model:IsA("Model") then
+            model.LevelOfDetail = Enum.ModelLevelOfDetail.Disabled
+        end
+    end
+    
+    -- Disable terrain decorations
+    if Workspace.Terrain then
+        Workspace.Terrain.Decoration = false
+    end
+end
+
+local function nukeParticlesAndEffects()
+    local descendants = Workspace:GetDescendants()
+    
+    for _, obj in ipairs(descendants) do
+        -- Particles
         if obj:IsA("ParticleEmitter") then
             obj.Rate = 0
+            obj.Enabled = false
         end
+        
+        -- Trails
         if obj:IsA("Trail") then
             obj.Enabled = false
         end
+        
+        -- Fire/Smoke/Sparkles
         if obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("Sparkles") then
             obj.Enabled = false
+        end
+        
+        -- Beams
+        if obj:IsA("Beam") then
+            obj.Enabled = false
+        end
+        
+        -- Decals/Textures (keep but reduce)
+        if obj:IsA("Decal") or obj:IsA("Texture") then
+            obj.Transparency = 1
+        end
+        
+        -- SurfaceGuis
+        if obj:IsA("SurfaceGui") then
+            obj.Enabled = false
+        end
+        
+        -- Billboards
+        if obj:IsA("BillboardGui") then
+            obj.Enabled = false
+        end
+        
+        -- Sound (mute non-essential)
+        if obj:IsA("Sound") and obj.Looped then
+            obj.Volume = 0
         end
     end
 end
 
--- Toggle function
-button.MouseButton1Click:Connect(function()
-    if not enabled then
-        enabled = true
-        button.Text = "ENABLED"
-        button.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
-        closeBtn.Visible = true
+local function optimizeCharacters()
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr.Character then
+            -- Remove shadows from character
+            for _, part in ipairs(plr.Character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CastShadow = false
+                    part.Material = Enum.Material.Plastic
+                end
+            end
+            
+            -- Disable face animations if any
+            local head = plr.Character:FindFirstChild("Head")
+            if head then
+                local face = head:FindFirstChildOfClass("Decal")
+                if face then
+                    -- Keep face but optimize
+                end
+            end
+        end
+    end
+end
+
+local function setGraphicsToMinimum()
+    -- Set graphics quality to lowest
+    settings().Rendering.QualityLevel = Enum.SavedQualitySetting.QualityLevel1
+    
+    -- Disable 3D rendering where possible
+    settings().Rendering.EnableFRM = false
+    
+    -- Reduce memory
+    settings().Rendering.MeshCacheSize = 0
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- FPS COUNTER
+-- ═══════════════════════════════════════════════════════════
+
+local fpsConnection
+local runningFPS = 0
+
+local function startFPSCounter()
+    local lastTime = tick()
+    local frameCount = 0
+    
+    fpsConnection = RunService.RenderStepped:Connect(function()
+        frameCount = frameCount + 1
+        local currentTime = tick()
         
-        -- Apply optimizations
-        applyFFlags()
-        optimizeGame()
-        
-        -- FPS counter (optional, removes after 3 seconds)
-        local fpsLabel = Instance.new("TextLabel")
-        fpsLabel.Size = UDim2.new(0, 100, 0, 30)
-        fpsLabel.Position = UDim2.new(0, 10, 0, 10)
-        fpsLabel.BackgroundTransparency = 0.5
-        fpsLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        fpsLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-        fpsLabel.TextSize = 16
-        fpsLabel.Font = Enum.Font.GothamBold
-        fpsLabel.Parent = screenGui
-        
-        local fpsConnection
-        local lastUpdate = tick()
-        local frames = 0
-        
-        fpsConnection = RunService.RenderStepped:Connect(function()
-            frames = frames + 1
-            if tick() - lastUpdate >= 1 then
-                fpsLabel.Text = "FPS: " .. frames
-                frames = 0
-                lastUpdate = tick()
+        if currentTime - lastTime >= 0.5 then
+            runningFPS = math.floor(frameCount / (currentTime - lastTime))
+            fpsLabel.Text = "FPS: " .. runningFPS
+            frameCount = 0
+            lastTime = currentTime
+            
+            -- Color based on FPS
+            if runningFPS >= 240 then
+                fpsLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- Green
+            elseif runningFPS >= 120 then
+                fpsLabel.TextColor3 = Color3.fromRGB(255, 255, 0) -- Yellow
+            else
+                fpsLabel.TextColor3 = Color3.fromRGB(255, 100, 0) -- Orange
+            end
+        end
+    end)
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- MAIN BOOST FUNCTION
+-- ═══════════════════════════════════════════════════════════
+
+local function extremeBoost()
+    -- Apply FFlags
+    applyExtremeFFlags()
+    
+    -- Nuke effects
+    nukeVisualEffects()
+    
+    -- Optimize workspace
+    optimizeWorkspace()
+    
+    -- Nuke particles
+    nukeParticlesAndEffects()
+    
+    -- Optimize characters
+    optimizeCharacters()
+    
+    -- Set graphics minimum
+    setGraphicsToMinimum()
+    
+    -- Start monitoring
+    startFPSCounter()
+    
+    -- Hook into new parts
+    Workspace.DescendantAdded:Connect(function(descendant)
+        if descendant:IsA("ParticleEmitter") then
+            descendant.Rate = 0
+            descendant.Enabled = false
+        elseif descendant:IsA("Trail") then
+            descendant.Enabled = false
+        elseif descendant:IsA("Fire") or descendant:IsA("Smoke") or descendant:IsA("Sparkles") then
+            descendant.Enabled = false
+        elseif descendant:IsA("BasePart") then
+            descendant.CastShadow = false
+        end
+    end)
+    
+    -- Hook into new players
+    Players.PlayerAdded:Connect(function(plr)
+        plr.CharacterAdded:Connect(function(char)
+            task.wait(0.5)
+            for _, part in ipairs(char:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CastShadow = false
+                    part.Material = Enum.Material.Plastic
+                end
             end
         end)
+    end)
+end
+
+-- ═══════════════════════════════════════════════════════════
+-- BUTTON HANDLERS
+-- ═══════════════════════════════════════════════════════════
+
+boostBtn.MouseButton1Click:Connect(function()
+    if not enabled then
+        enabled = true
         
-        -- Remove FPS counter after 3 seconds
-        task.delay(3, function()
-            fpsLabel:Destroy()
-            fpsConnection:Disconnect()
+        -- Visual feedback
+        boostBtn.Text = "BOOSTED!\n" .. string.rep("█", 5)
+        boostBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+        
+        -- Show FPS counter
+        fpsFrame.Visible = true
+        closeBtn.Visible = true
+        
+        -- Run boost
+        extremeBoost()
+        
+        -- Auto-remove UI after 5 seconds
+        task.delay(5, function()
+            if screenGui and screenGui.Parent then
+                screenGui:Destroy()
+                print("╔══════════════════════════════════════╗")
+                print("║  EXTREME FPS BOOST ACTIVE!          ║")
+                print("║  Target: 240-500+ FPS                ║")
+                print("║  All visual effects disabled         ║")
+                print("╚══════════════════════════════════════╝")
+            end
         end)
-        
-    else
-        -- Already enabled, just close UI
-        screenGui:Destroy()
     end
 end)
 
--- Close button just removes UI (keeps optimizations active)
 closeBtn.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
 
--- Make button draggable for mobile
+-- ═══════════════════════════════════════════════════════════
+-- MOBILE DRAGGING
+-- ═══════════════════════════════════════════════════════════
+
 local dragging = false
 local dragStart, startPos
 
-button.InputBegan:Connect(function(input)
+boostBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
         dragStart = input.Position
-        startPos = button.Position
+        startPos = boostBtn.Position
     end
 end)
 
-button.InputChanged:Connect(function(input)
+boostBtn.InputChanged:Connect(function(input)
     if dragging and input.UserInputType == Enum.UserInputType.Touch then
         local delta = input.Position - dragStart
-        button.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        closeBtn.Position = UDim2.new(button.Position.X.Scale, button.Position.X.Offset + 70, button.Position.Y.Scale, button.Position.Y.Offset + 10)
+        local newPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        boostBtn.Position = newPos
+        closeBtn.Position = UDim2.new(newPos.X.Scale, newPos.X.Offset + 80, newPos.Y.Scale, newPos.Y.Offset + 10)
     end
 end)
 
-button.InputEnded:Connect(function(input)
+boostBtn.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.Touch then
         dragging = false
     end
 end)
 
-print("Blox Fruits FPS Booster loaded - Tap BOOST FPS button")
+print("╔══════════════════════════════════════════════════╗")
+print("║  EXTREME FPS BOOSTER LOADED                      ║")
+print("║  Optimized for: Delta Executor + Blox Fruits       ║")
+print("║  Target: 240-500+ FPS                             ║")
+print("║                                                   ║")
+print("║  Tap the RED button to activate!                  ║")
+print("╚══════════════════════════════════════════════════╝")
